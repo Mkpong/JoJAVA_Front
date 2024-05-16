@@ -1,0 +1,50 @@
+/* styles.css */
+
+.eventContainer {
+    position: relative;
+    margin-top: 20px;
+    /* 이벤트 컨테이너의 스타일을 여기에 추가하세요 */
+  }
+  
+  .event {
+    /* 이벤트의 스타일을 여기에 추가하세요 */
+    margin-bottom: 30px;
+  }
+  
+  .dots {
+    position: absolute;
+    bottom: 10px; /* 이벤트 컨테이너 하단에서의 여백 조절 */
+    left: 50%; /* 가운데 정렬 */
+    transform: translateX(-50%); /* 가운데 정렬 */
+    display: flex;
+    gap: 5px; /* 점 사이의 간격 설정 */
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    justify-content: center; /* 가로 정렬을 중앙 정렬로 설정 */
+  }
+  
+  
+  .dot {
+    width: 10px; /* 점의 너비 */
+    height: 10px; /* 점의 높이 */
+    border-radius: 50%; /* 점을 동그랗게 만듦 */
+    background-color: gray; /* 점의 색상 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
+  }
+  
+  .dotActive {
+    position: absolute;
+    bottom: 10px; /* 이벤트 컨테이너 하단에서의 여백 조절 */
+    left: 50%; /* 가운데 정렬 */
+    transform: translateX(-50%); /* 가운데 정렬 */
+    display: flex;
+    gap: 5px; /* 점 사이의 간격 설정 */
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    justify-content: center; /* 가로 정렬을 중앙 정렬로 설정 */
+    background-color: black; /* 활성화된 점의 색상 */
+  }
+
+.eventBanner {
+    max-width: 1000px;
+    height: auto;
+}
+  
