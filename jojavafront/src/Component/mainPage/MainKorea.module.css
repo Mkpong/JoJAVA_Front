@@ -1,0 +1,53 @@
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.tabs {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.colImage {
+    margin-top: 20px;
+    margin-bottom: 70px;
+}
+
+.rowText1{
+    margin-left: 0px;
+}
+
+.rowText2{
+    margin-left: 0px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.rowText3{
+    font-weight: bold;
+    font-size:15px;
+}
+
+
+
+.imageStar{
+    width: 20px;
+    height: 20px;
+}
+
+.colStar {
+
+}
+
+.colScore {
+
+}
