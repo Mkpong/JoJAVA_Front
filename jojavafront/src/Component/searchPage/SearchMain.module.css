@@ -1,0 +1,59 @@
+.mainContainer {
+    max-width: 1500px;
+    margin-top: 20px;
+}
+
+.categoryDiv {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.categoryCheckbox {
+    margin-bottom: 10px;
+}
+
+.regionRow {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.regionSelect {
+    margin-bottom: 20px;
+}
+
+.searchboxCol{
+    background-color:aqua;
+    border-radius: 20px;
+}
+
+.searchboxRow{
+    margin-top: 10px;
+}
+
+.searchboxTitleRow{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.viewMap {
+    background-image: url('../../../public/image/map.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 150px;
+    justify-content: center;
+    align-items: center;
+    max-height: 150px;
+    margin-bottom: 30px;
+}
+
+.viewMapButton{
+    margin-top: 50px;
+}
+
+.tagRow{
+    margin-left: 20px;
+    margin-right: 20px;
+}

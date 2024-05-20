@@ -8,6 +8,8 @@ import SideBar from './Component/SideBar.js';
 import { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Main from './Component/mainPage/Main.js';
+import SearchMain from './Component/searchPage/SearchMain.js';
+import SearchMapMain from './Component/searchMapPage/SearchMapMain.js';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +27,8 @@ function App() {
             <NavBar toggleSidebar={toggleSidebar}/>
             <Routes>
               <Route path="/" element={<Main />} />
+              <Route path="/search" element={<SearchMain />} />
+              <Route path="/search/map" element={<SearchMapMain />} />
             </Routes>
             <BottomBar />
           </Col>
