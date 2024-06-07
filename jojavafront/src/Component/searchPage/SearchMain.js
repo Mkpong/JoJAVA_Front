@@ -1,11 +1,29 @@
 import React from "react";
 import styles from "./SearchMain.module.css";
 import { Container,Row,Col,Form,Button,ButtonGroup } from "react-bootstrap";
-import { useState } from "react";
-
-
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import Pagination from "react-js-pagination";
+import { useNavigate } from "react-router-dom";
 
 function SearchMain() {
+
+    const [selectedValue, setSelectedValue] = useState();
+    const [searchText , setSearchText] = useState("");
+    const [tableValue, setTableValue] = useState();
+    const [metadata, setMetadata] = useState();
+    const [page, setPage] = useState(1);
+    const [totalCount , setTotalCount] = useState(0);
+    const navigate = useNavigate();
+
+    const handlePageChange = (page) => {
+        setPage(page);
+    }
+
+    useEffect(() => {
+        searchHandle();
+      }, [page]); // 의존성 배열
 
     const checkboxItems = [
         { id: 'AT4', label: '관광명소' },
@@ -13,8 +31,35 @@ function SearchMain() {
         { id: 'AD5', label: '숙박' },
         { id: 'FD6', label: '음식점' },
         { id: 'CE7', label: '카페' },
-      ];
+    ];
 
+
+    const handleChange = (event) => {
+        const { id, checked } = event.target;
+        setSelectedValue(checked ? id : null);
+    };
+
+    const searchHandle = () => {
+        console.log(selectedValue);
+        axios.get("https://dapi.kakao.com/v2/local/search/keyword.json", {
+            headers: {"Authorization": 'KakaoAK c61d346c1a792192d7f3d3c7afa97797'},
+            params: {
+                query: searchText,
+                category_group_code: selectedValue,
+                size: 7,
+                page: page
+            }
+        }).then((response) => {
+            setTableValue(response.data.documents);
+            setTotalCount(response.data.meta.pageable_count);
+            console.log(response.data);
+        })
+        .catch((error) => console.log(error))
+    }
+
+    const handleDetail = (item) => {
+        navigate(`/detail/${item.id}`, {state: {placeInfo: item}});
+    }
       
 
 
@@ -28,19 +73,19 @@ function SearchMain() {
             </Row>
             <Row>
                 <Col className={styles.viewMap} md={{ span: 10, offset: 1 }}>
-                    <Button variant="primary" className={styles.viewMapButton}>지도로 보기</Button>
+                    <Button as={Link} to="/search/map" variant="primary" className={styles.viewMapButton}>지도로 보기</Button>
                 </Col>
             </Row>
             <Row className={styles.searchboxRow}>
             <Col lg={9}>
             <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Control type="text" placeholder="검색어를 입력하세요" />
+                    <Form.Control type="text" placeholder="검색어를 입력하세요" onChange={(e) => setSearchText(e.target.value)}/>
                 </Form.Group>
             </Form>
             </Col>
             <Col lg={3}>
-                <Button variant="light">
+                <Button variant="light" onClick={searchHandle}>
                     검색
                 </Button>
             </Col>
@@ -57,6 +102,8 @@ function SearchMain() {
                         id={item.id}
                         label={item.label}
                         className={styles.categoryCheckbox}
+                        checked={selectedValue === item.id}
+                        onChange={handleChange}
                         />
                     ))}
                     </Form>
@@ -92,17 +139,66 @@ function SearchMain() {
                     </Form.Select>
                 </Col>
             </Row>
-            <hr />
-            <Row className={styles.regionRow}>
-                <Row>
-                <Col md={{ span: 8, offset: 2 }}>
-                    <div className={styles.categoryDiv}>#태그</div>
-                </Col>
-                </Row>
-                <Row className={styles.tagRow}>
-                    
-                </Row>
-            </Row>
+            </Col>
+            <Col>
+                    <Row>
+                        <Col className={styles.resultTitle}>
+                            검색 결과
+                        </Col>
+                    </Row>
+                    <hr />
+                    {tableValue && tableValue.map((item, index) => (
+                        <Row className={styles.tableRow}>
+                            <Container className={styles.tableContainer}>
+                            <Row>
+                                <Col className={styles.detailCard}>
+                                <Row>
+                                    <Col md={10}>
+                                    <Row className={styles.datasetTitle}>
+                                        {item.place_name}
+                                        <Col className={styles.detailButton}>
+                                            <Button
+                                            onClick={() => handleDetail(item)}
+                                            variant="light"
+                                            size='sm'
+                                            >자세히보기</Button>
+                                        </Col>
+                                    </Row>
+                                    <Row className={styles.datasetInfo}>
+                                        {item.address_name}
+                                    </Row>
+                                    </Col>
+                                </Row>
+                                </Col>
+                            </Row>
+                            </Container>
+                        </Row>
+                    ))}
+                    {tableValue && (
+                    <Row>
+                        <Col className={styles.pageCol}>
+                        <Pagination
+                            activePage={page}
+                            itemsCountPerPage={7}
+                            totalItemsCount={totalCount}
+                            pageRangeDisplayed={5}
+                            prevPageText={"<"}
+                            nextPageText={">"}
+                            onChange={handlePageChange}
+                            itemClass={styles.paginationListItem}
+                            linkClass={styles.paginationLink}
+                            activeClass={styles.paginationListItemActive}
+                            activeLinkClass={styles.paginationLinkActive}
+                            itemClassFirst={styles.paginationListItemFirstChild}
+                            itemClassLast={styles.paginationListItemLastChild}
+                            linkClassHover={styles.paginationLinkHover}
+                            linkClassActiveHover={styles.paginationLinkActiveHover}
+                        />
+                        </Col>
+                    </Row>
+                    )}
+
+
             </Col>
         </Row>
         </Container>

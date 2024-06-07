@@ -1,3 +1,9 @@
 .mainContainer {
     max-width: 1500px;
+    padding: 20px;
+}
+
+.kakaoMap {
+    width: 800px;
+    height: 600px;
 }

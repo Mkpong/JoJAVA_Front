@@ -1,22 +1,32 @@
 import React from "react";
 import styles from "./SearchMapMain.module.css";
 import { Container,Row,Col,Form } from "react-bootstrap";
+import { useEffect } from "react";
 
 
 
-function searchMapMain() {
+function SearchMapMain() {
+
+    useEffect(() => {
+        const container = document.getElementById('map');
+        if (window.kakao && container) {
+          const options = {
+            center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3
+          };
+          const map = new window.kakao.maps.Map(container, options);
+        }
+      }, []);
 
     return (
         <div>
         <Container className={styles.mainContainer}>
         <Row>
             <Col>
-            <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="name@example.com" />
-                </Form.Group>
-            </Form>
+            <div id="map" className={styles.kakaoMap}></div>
+            </Col>
+            <Col>
+                hello
             </Col>
         </Row>
         </Container>
@@ -24,4 +34,4 @@ function searchMapMain() {
     );
 }
 
-export default searchMapMain;
+export default SearchMapMain;

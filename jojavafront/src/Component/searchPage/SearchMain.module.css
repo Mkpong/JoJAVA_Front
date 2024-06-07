@@ -23,8 +23,8 @@
 }
 
 .searchboxCol{
-    background-color:aqua;
     border-radius: 20px;
+    border: 2px solid black
 }
 
 .searchboxRow{
@@ -56,4 +56,143 @@
 .tagRow{
     margin-left: 20px;
     margin-right: 20px;
+}
+
+.resultTitle {
+    display: flex;
+    justify-content: flex-start;
+    font-weight: bold;
+    font-size: 25px;
+    margin-left: 20px;
+
+}
+
+.tableRow {
+    margin-left: 10px;
+}
+
+
+.tableLink {
+    display: flex;
+    text-align: start;
+}
+
+.tableContainer {
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.detailCard {
+background-color: white;
+border: 1px solid #ddd;
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardImg {
+width: 100%;
+}
+
+.tags {
+margin-left: 20px;
+}
+
+.tag {
+display: inline-block;
+background-color: #f1f1f1;
+border-radius: 20px;
+padding: 5px 10px;
+margin-right: 5px;
+font-size: 14px;
+}
+
+.datasetTitle {
+font-size: 24px;
+font-weight: bold;
+margin-left: 20px;
+margin-top: 5px;
+}
+
+.datasetInfo {
+font-size: 14px;
+color: #777;
+margin-left: 20px;
+}
+
+.datasetDetails {
+font-size: 14px;
+color: #777;
+margin-bottom: 10px;
+margin-left: 20px;
+}
+
+.buttons {
+display: flex;
+align-items: center;
+}
+
+.detailButton {
+    margin-right: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.test {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.paginationList {
+    list-style: none;
+    padding: 0;
+}
+
+.paginationListItem {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.paginationListItemFirstChild {
+    border-radius: 5px 0 0 5px;
+}
+
+.paginationListItemLastChild {
+    border-radius: 0 5px 5px 0;
+}
+
+.paginationLink {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+}
+
+.paginationListItemActive {
+    background-color: #337ab7;
+}
+
+.paginationLinkActive {
+    color: white;
+}
+
+.paginationLinkHover,
+.paginationLinkActiveHover {
+    color: blue;
+}
+
+.pageCol{
+    display: flex;
+    justify-content: center;
 }

@@ -10,6 +10,10 @@ import { Row, Col } from 'react-bootstrap';
 import Main from './Component/mainPage/Main.js';
 import SearchMain from './Component/searchPage/SearchMain.js';
 import SearchMapMain from './Component/searchMapPage/SearchMapMain.js';
+import DetailMain from './Component/hotpleDetailPage/DetailMain.js';
+import KakaoLogin from './Component/KakaoLoginPage/KakaoLogin.js';
+import { Navigate } from 'react-router-dom';
+import MyPageMain from './Component/myPage/MyPageMain.js';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,6 +33,10 @@ function App() {
               <Route path="/" element={<Main />} />
               <Route path="/search" element={<SearchMain />} />
               <Route path="/search/map" element={<SearchMapMain />} />
+              <Route path="/detail/:id" element={<DetailMain />} />
+              <Route exact path='/kakao-login' element={<KakaoLogin />} />
+              <Route path="*" element={<Navigate to="/" />} />
+              <Route path="/mypage" element={<MyPageMain />} />
             </Routes>
             <BottomBar />
           </Col>

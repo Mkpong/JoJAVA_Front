@@ -9,14 +9,14 @@ function SideBar() {
         <Col md={12}>
           <Nav className="flex-column">
             <Nav.Item className={styles.mainMenu}>
-              Dataset
+              Hotple
             </Nav.Item>
             <hr />
             <Nav.Item>
               <Nav.Link href="/search">Search</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href="/upload">Upload</Nav.Link>
+              <Nav.Link href="/search/map">Map</Nav.Link>
             </Nav.Item>
             <Nav.Item className={styles.mainMenu}>
               AI Train
@@ -29,12 +29,15 @@ function SideBar() {
               <Nav.Link href="/search">Test Model</Nav.Link>
             </Nav.Item>
             <Nav.Item className={styles.mainMenu}>
-              Test Model
+              My Page
             </Nav.Item>
             <hr />
             <Nav.Item>
               <Nav.Link href="/search">myPage</Nav.Link>
-            </Nav.Item>          
+            </Nav.Item>   
+            <Nav.Item>
+              <Nav.Link href="/search">myPlace</Nav.Link>
+            </Nav.Item>              
           </Nav>
         </Col>
       </Row>
