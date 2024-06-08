@@ -196,3 +196,13 @@ align-items: center;
     display: flex;
     justify-content: center;
 }
+
+.imageHeart{
+    width:40px;
+    height: 20px;
+}
+
+.heartImageCol {
+    display: flex;
+    justify-content: flex-end;
+}

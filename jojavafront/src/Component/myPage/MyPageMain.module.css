@@ -16,3 +16,62 @@
     margin-bottom: 10px;
   }
   
+.tableContainer {
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.tableRow {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.detailCard {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.datasetTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.detailButton {
+  margin-right: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.datasetInfo {
+  font-size: 14px;
+  color: #777;
+  margin-left: 20px;
+}
+
+.downButton {
+  width: 3%;
+}
+
+.infoButton {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.reviewTitleCol {
+  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.reviewContentCol {
+  font-size: 15px;
+  display: flex;
+  justify-content: flex-start;
+  text-align: start;
+}

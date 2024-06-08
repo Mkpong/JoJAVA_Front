@@ -14,7 +14,7 @@ function Main() {
         <Container className={styles.mainContainer}>
             <MainEvent />
             <MainContent1 />
-            <MainContent2 />
+            {/* <MainContent2 /> */}
             <MainKorea />
         </Container>
         </div>

@@ -15,6 +15,9 @@ function SearchMain() {
     const [metadata, setMetadata] = useState();
     const [page, setPage] = useState(1);
     const [totalCount , setTotalCount] = useState(0);
+    const [isHeart, setIsHeart] = useState(false);
+    const [userHearts , setUserHearts] = useState([]);
+
     const navigate = useNavigate();
 
     const handlePageChange = (page) => {
@@ -23,6 +26,9 @@ function SearchMain() {
 
     useEffect(() => {
         searchHandle();
+        // 유저의 하트 정보 가져오기
+        // axios.get..
+        // setUserHearts(response)...
       }, [page]); // 의존성 배열
 
     const checkboxItems = [
@@ -60,9 +66,15 @@ function SearchMain() {
     const handleDetail = (item) => {
         navigate(`/detail/${item.id}`, {state: {placeInfo: item}});
     }
+
+    const handleAddHeart = () => {
+        // 유저 하트 정보에 추가
+    }
+
+    const handleDeleteHeart = () => {
+        // 유저 하트 정보에서 해당 값 삭제
+    }
       
-
-
     return (
         <div>
         <Container className={styles.mainContainer}>
@@ -153,15 +165,19 @@ function SearchMain() {
                             <Row>
                                 <Col className={styles.detailCard}>
                                 <Row>
-                                    <Col md={10}>
+                                    <Col md={12}>
                                     <Row className={styles.datasetTitle}>
                                         {item.place_name}
-                                        <Col className={styles.detailButton}>
+                                        <Col md = {2} className={styles.detailButton}>
                                             <Button
                                             onClick={() => handleDetail(item)}
                                             variant="light"
                                             size='sm'
                                             >자세히보기</Button>
+                                        </Col>
+                                        <Col className={styles.heartImageCol}>
+                                        {userHearts.includes(item.id) ? <img src="../../../image/heart_fuild.png" className={styles.imageHeart} onClick={() => handleDeleteHeart()}></img>
+                                        : <img src="../../../image/heart_empty.png" className={styles.imageHeart} onClick={() => handleAddHeart()}></img>}
                                         </Col>
                                     </Row>
                                     <Row className={styles.datasetInfo}>

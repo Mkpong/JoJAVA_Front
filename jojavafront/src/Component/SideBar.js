@@ -19,25 +19,12 @@ function SideBar() {
               <Nav.Link href="/search/map">Map</Nav.Link>
             </Nav.Item>
             <Nav.Item className={styles.mainMenu}>
-              AI Train
-            </Nav.Item>
-            <hr />
-            <Nav.Item>
-              <Nav.Link href="/search">Train Model</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/search">Test Model</Nav.Link>
-            </Nav.Item>
-            <Nav.Item className={styles.mainMenu}>
               My Page
             </Nav.Item>
             <hr />
             <Nav.Item>
-              <Nav.Link href="/search">myPage</Nav.Link>
-            </Nav.Item>   
-            <Nav.Item>
-              <Nav.Link href="/search">myPlace</Nav.Link>
-            </Nav.Item>              
+              <Nav.Link href="/mypage">myPage</Nav.Link>
+            </Nav.Item>            
           </Nav>
         </Col>
       </Row>

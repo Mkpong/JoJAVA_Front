@@ -60,6 +60,18 @@
   }
 
   .cardImg {
-    width: 100%;
+    width: 150px;
+    height: 120px;
+    margin-left: 10px;
+  }
+
+  .selectButtonCol {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+  }
+
+  .selectButton{
+    margin-right: 5px;
   }
   

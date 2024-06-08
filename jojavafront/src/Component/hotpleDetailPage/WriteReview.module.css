@@ -28,6 +28,7 @@
   height: 150px;
   padding: 0.5rem;
   font-size: 1rem;
+  margin-top: 10px;
 }
 
 .submitButton {
@@ -43,11 +44,18 @@
 }
 
 .star {
-    display: flex;
-    justify-content: flex-start;
+    font-size: 15px;
+    margin-top: 5px;
+    font-weight: bold;
 }
 
 .submitButtonCol {
     display: flex;
     justify-content: flex-end;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 5px;
 }

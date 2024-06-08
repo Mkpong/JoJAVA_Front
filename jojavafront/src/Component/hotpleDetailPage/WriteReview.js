@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './WriteReview.module.css';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import axios from 'axios';
 
 const WriteReview = (props) => {
   const [data, setData] = useState({
     "target": props.placeInfo.id,
-    "title": "그런거없다",
+    "title": "",
     "content": "",
-    "stars": "",
+    "stars": 0,
     "imgUrl": ""
   })
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const accessToken = localStorage.getItem('accessToken');
+    console.log(accessToken);
     const config = {
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }
     };
-    axios.post("http://220.149.232.224:8080/api/reviews" , config, data)
-    .then((response) => console.log(response.data))
-    .catch((error) => console.log(error))
-    setData({
-        ...data,
-        ['content']: "",
-        ['stars']: "0"
-    })
+    if(props.isModify){
+      console.log(data);
+      axios.put(`http://220.149.232.224:8080/api/reviews/${props.reviewId}` , data, config)
+      .then((response) => {
+        window.location.href = `/detail/${props.placeInfo.id}`;
+      })
+      .catch((error) => console.log(error))
+      props.setIsModify(false);
+    }
+    else {
+      axios.post("http://220.149.232.224:8080/api/reviews" , data, config)
+      .then((response) => {
+        window.location.href = `/detail/${props.placeInfo.id}`;
+      })
+      .catch((error) => console.log(error))
+    }
+
     props.setActiveTab("review");
-  };
+    };
 
     const handleChange = (e) => {
         setData({
@@ -37,6 +47,17 @@ const WriteReview = (props) => {
             [e.target.id]: e.target.value,
         });
     };
+
+    useEffect(() => {
+      if(props.isModify){
+        setData({
+          ...data,
+          ['title']: props.reviewContent.title,
+          ['content']: props.reviewContent.content,
+          ['stars']: props.reviewContent.stars
+        })
+      }
+    }, [props.isModify])
 
   
 
@@ -46,7 +67,7 @@ const WriteReview = (props) => {
         <label className={styles.label}>
         <Row>
         <Col md={1}>
-            <div className={styles.star}>평점 : </div>
+            <div className={styles.star}>평점</div>
         </Col>
         <Col md={1} className={styles.star}>
             <select
@@ -73,12 +94,26 @@ const WriteReview = (props) => {
       </Container>
       <Container className={styles.inputGroup}>
         <label className={styles.label}>
-          <textarea
+          <Row>
+          <Col className={styles.title}>Title</Col>
+          <Col md={11}>
+          <Form.Control
+            type="text"
+            id="title"
+            value={data.title}
+            onChange={handleChange}
+          /></Col>
+          </Row>
+          <Row>
+            <Col className={styles.title}>Content</Col> 
+          </Row>
+          <Form.Control
+            as="textarea"
+            type="text"
             id="content"
             value={data.content}
-            onChange={handleChange}
             className={styles.textAreaInput}
-            required
+            onChange={handleChange}
           />
         </label>
       </Container>

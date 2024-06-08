@@ -2,9 +2,64 @@ import React from 'react';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap';
 import styles from './DetailTop.module.css'
 import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 const DetailTop = (props) => {
   const navigate = useNavigate();
+  const [imageSrc, setImageSrc] = useState("../../../image/searchIcon.png");
+  const [selectedImage , setSelectedImage] = useState();
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/image?id=${props.placeInfo.id}`, {
+          responseType: 'blob'
+        });
+        const imageUrl = URL.createObjectURL(response.data);
+        setImageSrc(imageUrl);
+      } catch (error) {
+        console.error('Error fetching image:', error);
+      }
+    };
+    fetchImage();
+  }, [])
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleTextClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      try {
+        const response = await axios.post(`http://localhost:8081/api/image?id=${props.placeInfo.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log('Image uploaded successfully:', response.data);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+  };
+
 
   return (
     <Container className={styles.datasetDetailContainer}>
@@ -12,7 +67,25 @@ const DetailTop = (props) => {
         <Col md={10} className={styles.detailCard}>
           <Row>
             <Col md={2} className="text-center">
-                <img src="../../../image/searchIcon.png" className={styles.cardImg} />
+                <Row>
+                  <Col>
+                  <img src={imageSrc} className={styles.cardImg} />
+                  <form>
+                  <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} ref={fileInputRef}/>
+                  </form>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className={styles.selectButtonCol}>
+                  <Button
+                    size="sm"
+                    onClick={handleTextClick}
+                    className={styles.selectButton}
+                    variant='light'
+                  >이미지 변경</Button>
+                  <Button onClick={handleSubmit} size="sm" className={styles.selectButton} variant="light">등록</Button>
+                  </Col>
+                </Row>
             </Col>
             <Col md={10}>
               <Row className={styles.tags}>
