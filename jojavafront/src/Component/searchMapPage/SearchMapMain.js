@@ -1,8 +1,154 @@
 import React from "react";
 import styles from "./SearchMapMain.module.css";
 import { Container,Row,Col,Form,Button } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Pagination from "react-js-pagination";
+
+function Review(props) {
+  const nickname = localStorage.getItem('nickname');
+  const accessToken = localStorage.getItem('accessToken');
+
+
+  useEffect(() => {
+  }, [])
+
+  return (
+      <Container className="mt-3">
+          <Row>
+              <Col md={8} className={styles.reviewWriter}>
+                  {props.review.author.name}&nbsp;(<img src="../../../image/star.png" className={styles.imageStar}></img>&nbsp;{props.review.stars}&nbsp;)
+              </Col>
+          </Row>
+          <Row>
+              <Col md={8} className={styles.title}>
+                  {props.review.title}    
+              </Col>
+          </Row>
+          <Row>
+              <Col md={8} className="text-start">
+                  {props.review.content}
+              </Col>
+          </Row>
+          <Row>
+              <Col md={10} className={styles.reviewDate}>{props.review.createdAt}</Col>
+          </Row>
+          <hr />
+      </Container>
+  );
+}
+
+const PlaceInfo = (props) => {
+  const [info, setInfo] = useState();
+  const [imageSrc, setImageSrc] = useState("../../../image/searchIcon.png");
+  const [place, setPlace] = useState();
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [selectedImage , setSelectedImage] = useState();
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(5);
+  const [reviews, setReviews] = useState();
+  const accessToken = localStorage.getItem('accessToken');
+  const config = {
+      headers: {
+          "Authorization": `Bearer ${accessToken}`
+      }
+  };
+
+    const handlePageChange = (page) => {
+      setPage(page);
+    }
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get(`http://220.149.232.224:8081/api/image?id=${props.place.id}`, {
+          responseType: 'blob'
+        });
+        const imageUrl = URL.createObjectURL(response.data);
+        setImageSrc(imageUrl);
+      } catch (error) {
+        console.error('Error fetching image:', error);
+      }
+    };
+    fetchImage();
+    axios.get(`http://220.149.232.224:8080/api/places/${props.place.id}`, config)
+    .then((response) => {
+      console.log(response.data);
+      setPlace(response.data);
+    }).catch((error) => console.log(error))
+    axios.get(`http://220.149.232.224:8080/api/reviews/targetPlace?targetPlaceId=${props.place.id}&page=${page-1}&size=3`)
+    .then((response) => {
+        setReviews(response.data.content);
+        setTotalCount(response.data.totalElements);
+        console.log(response.data);
+    }).catch((error) => setReviews(null));
+  }, [page, props.place])
+
+  const handleDetail = (item) => {
+    navigate(`/detail/${item.id}`, {state: {placeInfo: item}});
+  }
+
+
+  return (
+
+    <Row className={styles.tableRow}>
+      <Container className={styles.tableContainer}>
+      <Row className={styles.detailCard} onClick={() => handleDetail(props.place)}>
+      <Col md={2} className={styles.imageCol}>
+            <img src={imageSrc} className={styles.cardImg} />
+      </Col>
+      <Col>
+      <Row className={styles.mainRow}>
+        <Col md={12}>
+          <Row>
+            <Col >
+            <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating}</> : <>---</>}&nbsp;)
+            </Col>
+          </Row>
+          <Row className={styles.datasetTitle}>
+            <Col>
+            {props.place.place_name}
+            </Col>
+          </Row>
+          <Row className={styles.datasetInfo}>
+            <Col>
+              {props.place.category_name}
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      </Col>
+      </Row>
+      {reviews && (reviews.map((item, index) => {
+                return ( <Review key={index} review={item} /> );
+                }))}
+      <Row>
+        <Col className={styles.pageCol}>
+        <Pagination
+            activePage={page}
+            itemsCountPerPage={5}
+            totalItemsCount={totalCount}
+            pageRangeDisplayed={5}
+            prevPageText={"<"}
+            nextPageText={">"}
+            onChange={handlePageChange}
+            itemClass={styles.paginationListItem}
+            linkClass={styles.paginationLink}
+            activeClass={styles.paginationListItemActive}
+            activeLinkClass={styles.paginationLinkActive}
+            itemClassFirst={styles.paginationListItemFirstChild}
+            itemClassLast={styles.paginationListItemLastChild}
+            linkClassHover={styles.paginationLinkHover}
+            linkClassActiveHover={styles.paginationLinkActiveHover}
+        />
+        </Col>
+    </Row>
+      </Container>
+    </Row>
+  );
+}
 
 
 function SearchMapMain() {
@@ -10,6 +156,7 @@ function SearchMapMain() {
     "keyword": "",
     "category": ""
   })
+  
 
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -35,8 +182,8 @@ function SearchMapMain() {
     })
   }
 
-  const clickMarker = (markerInfo) => {
-    setSelectedMarkerInfo(markerInfo); // 마커 클릭 시 상태 업데이트
+  const clickMarker = (item) => {
+    setSelectedMarkerInfo(item); // 마커 클릭 시 상태 업데이트
   };
 
   const handleSubmit = () => {
@@ -71,19 +218,9 @@ function SearchMapMain() {
             clickable: true
           });
 
-          const markerInfo = {
-            addressName: item.address_name,
-            categoryName: item.category_name,
-            categoryGroupCode: item.category_group_code,
-            categoryGroupName: item.category_group_name,
-            placeName : item.place_name,
-            x: item.x,
-            y: item.y
-          }
-
           // 마커 클릭 이벤트
           window.kakao.maps.event.addListener(marker, 'click', function() {
-            clickMarker(markerInfo);
+            clickMarker(item);
           });
 
           // 마커를 지도에 표시
@@ -142,14 +279,7 @@ function SearchMapMain() {
                 {/* 마커 정보 표시 */}
               <Container className={styles.markerInfoContainer}>
                 {selectedMarkerInfo ? (
-                  <div className={styles.markerInfo}>
-                    <h4>마커 정보</h4>
-                    <p><strong>장소명:</strong> {selectedMarkerInfo.placeName}</p>
-                    <p><strong>주소:</strong> {selectedMarkerInfo.addressName}</p>
-                    <p><strong>카테고리:</strong> {selectedMarkerInfo.categoryName}</p>
-                    <p><strong>카테고리 그룹명:</strong> {selectedMarkerInfo.categoryGroupName}</p>
-                    <p><strong>좌표:</strong> {selectedMarkerInfo.x}, {selectedMarkerInfo.y}</p>
-                  </div>
+                  <PlaceInfo place={selectedMarkerInfo} />
                 ) : (
                   <p>마커를 클릭하여 정보를 확인하세요.</p>
                 )}

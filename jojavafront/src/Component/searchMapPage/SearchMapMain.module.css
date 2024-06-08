@@ -29,3 +29,141 @@
     padding: 20px;
     border-radius: 10px;
 }
+
+.datasetInfo {
+  font-size: 14px;
+  color: #777;
+  margin-left: 20px;
+}
+
+.datasetTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.tableContainer {
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.detailCard {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detailButton {
+  margin-right: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cardImg {
+  width: 120px;
+  height: 100px;
+}
+
+.selectButtonCol {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.selectButton{
+  margin-right: 5px;
+}
+
+.imageCol {
+  margin-right: 20px;
+}
+
+.mainRow {
+  margin-top: 20px;
+}
+
+.reviewWriter {
+  text-align: left;
+  font-weight: bold;
+}
+
+.imageStar{
+  width: 20px;
+  height: 20px;
+  margin-bottom: 3px;
+}
+
+.reviewDate {
+  display: flex;
+  justify-content: flex-start;
+  color: #aaa;
+}
+
+.title{
+  text-align: start;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.pageCol{
+  display: flex;
+  justify-content: center;
+}
+
+.paginationListItem {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e2e2e2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.paginationListItemFirstChild {
+  border-radius: 5px 0 0 5px;
+}
+
+.paginationListItemLastChild {
+  border-radius: 0 5px 5px 0;
+}
+
+.paginationLink {
+  text-decoration: none;
+  color: #337ab7;
+  font-size: 1rem;
+}
+
+.paginationListItemActive {
+  background-color: #337ab7;
+}
+
+.paginationLinkActive {
+  color: white;
+}
+
+.paginationLinkHover,
+.paginationLinkActiveHover {
+  color: blue;
+}
+
+.imageStar {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+}
+
+.starCol {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.notReview {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
