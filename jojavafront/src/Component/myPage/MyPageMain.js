@@ -1,9 +1,18 @@
 // MyPageMain.js
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import styles from './MyPageMain.module.css';
 import { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+
+const accessToken = localStorage.getItem('accessToken');
+const config = {
+    headers: {
+        "Authorization": `Bearer ${accessToken}`
+    }
+};
 
 const MyReview = (props) => {
   const [isActive, setIsActive] = useState(false);
@@ -41,8 +50,28 @@ const MyReview = (props) => {
   );
 }
 
-const MyHeart = () => {
+const MyHeart = (props) => {
+  const [info, setInfo] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`http://220.149.232.224:8080/api/places/${props.id}`, config)
+    .then((response) => {
+      setInfo(response.data)
+      setInfo({
+        ...response.data,
+        ['id']: response.data.kakaoPlaceId
+      })
+    }).catch((error) => console.log(error));
+  }, [])
+
+  const handleDetail = (item) => {
+    navigate(`/detail/${item.id}`, {state: {placeInfo: item}});
+  }
+
   return (
+    <>
+    {info && 
     <Row className={styles.tableRow}>
       <Container className={styles.tableContainer}>
       <Row>
@@ -50,16 +79,17 @@ const MyHeart = () => {
           <Row>
               <Col md={12}>
               <Row className={styles.datasetTitle}>
-                  장소 이름
+                  {info.place_name}
                   <Col md = {4} className={styles.detailButton}>
                       <Button
                       variant="light"
                       size='sm'
+                      onClick={() => handleDetail(info)}
                       >자세히보기</Button>
                   </Col>
               </Row>
               <Row className={styles.datasetInfo}>
-                  주소 이름
+                  {info.address_name}
               </Row>
               </Col>
           </Row>
@@ -67,6 +97,7 @@ const MyHeart = () => {
       </Row>
       </Container>
     </Row>
+    }</>
   );
 }
 
@@ -75,6 +106,17 @@ const MyPageMain = () => {
   const [heartPlace, setHeartPlace] = useState();
   const [reviewPlace, setReviewPlace] = useState();
 
+  useEffect(() => {
+    axios.get("http://220.149.232.224:8080/api/users/current", config)
+    .then((response) => {
+        if(response.data.favorite_places !== null){
+            setHeartPlace(response.data.favorite_places);
+        }
+        console.log(response.data.favorite_places);
+    })
+    .catch((error) => console.log(error))
+  }, [])
+
   return (
     <Container className={styles.container}>
       <Row>
@@ -82,9 +124,8 @@ const MyPageMain = () => {
           <Card className={styles.card}>
             <Card.Body>
               <h2>찜 목록</h2>
-              <MyHeart />
               {heartPlace && heartPlace.map((item, key) => (
-                <MyHeart />
+                <MyHeart id={item}/>
               ))}
             </Card.Body>
           </Card>
@@ -95,7 +136,7 @@ const MyPageMain = () => {
               <h2>내가 다녀왔던 곳</h2>
               <MyReview />
               {reviewPlace && reviewPlace.map((item, key) => (
-                <MyReview />
+                <MyReview id={item} />
               ))}
             </Card.Body>
           </Card>

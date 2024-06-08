@@ -17,6 +17,13 @@ function SearchMain() {
     const [totalCount , setTotalCount] = useState(0);
     const [isHeart, setIsHeart] = useState(false);
     const [userHearts , setUserHearts] = useState([]);
+    const [isRender, setIsRender] = useState(false);
+    const accessToken = localStorage.getItem('accessToken');
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${accessToken}`
+        }
+    };
 
     const navigate = useNavigate();
 
@@ -26,10 +33,15 @@ function SearchMain() {
 
     useEffect(() => {
         searchHandle();
-        // 유저의 하트 정보 가져오기
-        // axios.get..
-        // setUserHearts(response)...
-      }, [page]); // 의존성 배열
+        axios.get("http://220.149.232.224:8080/api/users/current", config)
+        .then((response) => {
+            if(response.data.favorite_places !== null){
+                setUserHearts(response.data.favorite_places);
+            }
+            console.log(response.data.favorite_places);
+        })
+        .catch((error) => console.log(error))
+      }, [page, isRender]); // 의존성 배열
 
     const checkboxItems = [
         { id: 'AT4', label: '관광명소' },
@@ -67,12 +79,55 @@ function SearchMain() {
         navigate(`/detail/${item.id}`, {state: {placeInfo: item}});
     }
 
-    const handleAddHeart = () => {
+    const handleAddHeart = (item) => {
+        // 장소 DB에 해당 장소 추가
+        const placeData = {
+            "address_name": item.address_name,
+            "category_group_code": item.category_group_code,
+            "category_group_name": item.category_group_name,
+            "distance": item.distance,
+            "phone": item.phone,
+            "kakao_place_id": item.id,
+            "place_name": item.place_name,
+            "place_address_name": item.road_address_name,
+            "x": item.x,
+            "y": item.y,
+            "rating": 0
+        }
+        axios.post("http://220.149.232.224:8080/api/places", placeData, config)
+        .then((response) => {
+        }).catch((error) => console.log(error));
         // 유저 하트 정보에 추가
+        axios.post(`http://220.149.232.224:8080/api/users/favorite-places?kakaoPlaceId=${item.id}`, null,  config)
+        .then((response) => {
+            console.log(response.data);
+        }).catch((error) => console.log(error))
+        axios.get("http://220.149.232.224:8080/api/users/current", config)
+        .then((response) => {
+            if(response.data.favorite_places !== null){
+                setUserHearts(response.data.favorite_places);
+                setIsRender(!isRender);
+            }
+            console.log(response.data.favorite_places);
+        })
+        .catch((error) => console.log(error))
     }
 
-    const handleDeleteHeart = () => {
+    const handleDeleteHeart = (item) => {
         // 유저 하트 정보에서 해당 값 삭제
+        axios.delete(`http://220.149.232.224:8080/api/users/favorite-places?kakaoPlaceId=${item.id}`, config)
+        .then((response) => {
+            console.log(response.data);
+        }).catch((error) => console.log(error))
+        axios.get("http://220.149.232.224:8080/api/users/current", config)
+        .then((response) => {
+            if(response.data.favorite_places !== null){
+                setUserHearts(response.data.favorite_places);
+                setIsRender(!isRender);
+            }
+            console.log(response.data.favorite_places);
+        })
+        .catch((error) => console.log(error))
     }
       
     return (
@@ -121,36 +176,6 @@ function SearchMain() {
                     </Form>
                 </Col>
             </Row>
-            <hr />
-            <Row className={styles.regionRow}>        
-                <Col md={{ span: 8, offset: 2 }}>
-                    <div className={styles.categoryDiv}>지역</div>
-
-                    <Form.Select aria-label="Default select example" className={styles.regionSelect}>
-                        <option>---</option>
-                        <option value="1">경기도</option>
-                        <option value="2">강원도</option>
-                        <option value="3">충청북도</option>
-                        <option value="4">충청남도</option>
-                        <option value="5">전라북도</option>
-                        <option value="6">전라남도</option>
-                        <option value="7">경상북도</option>
-                        <option value="8">경상남도</option>
-                        <option value="9">서울광역시</option>
-                        <option value="10">울산광역시</option>
-                        <option value="11">광주광역시</option>
-                        <option value="12">인천광역시</option>
-                        <option value="13">부산광역시</option>
-                        <option value="14">대구광역시</option>
-                        <option value="15">대전광역시</option>
-                    </Form.Select>
-
-                    <Form.Select aria-label="Default select example" className={styles.regionSelect}>
-                        <option>---</option>
-                        <option value="1">부천시</option>
-                    </Form.Select>
-                </Col>
-            </Row>
             </Col>
             <Col>
                     <Row>
@@ -176,8 +201,8 @@ function SearchMain() {
                                             >자세히보기</Button>
                                         </Col>
                                         <Col className={styles.heartImageCol}>
-                                        {userHearts.includes(item.id) ? <img src="../../../image/heart_fuild.png" className={styles.imageHeart} onClick={() => handleDeleteHeart()}></img>
-                                        : <img src="../../../image/heart_empty.png" className={styles.imageHeart} onClick={() => handleAddHeart()}></img>}
+                                        {userHearts.includes(item.id) ? <img src="../../../image/heart_fuild.png" className={styles.imageHeart} onClick={() => handleDeleteHeart(item)}></img>
+                                        : <img src="../../../image/heart_empty.png" className={styles.imageHeart} onClick={() => handleAddHeart(item)}></img>}
                                         </Col>
                                     </Row>
                                     <Row className={styles.datasetInfo}>

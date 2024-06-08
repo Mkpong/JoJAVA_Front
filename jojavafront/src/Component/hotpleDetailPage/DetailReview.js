@@ -92,12 +92,12 @@ function DetailReview(props) {
     const handlePageChange = (page) => {
         setPage(page);
     }
-    useEffect(() => {
-        
-        axios.get(`http://220.149.232.224:8080/api/reviews/target?target=${props.placeInfo.id}&page=${page-1}&size=5`)
+    useEffect(() => { 
+        axios.get(`http://220.149.232.224:8080/api/reviews/targetPlace?targetPlaceId=${props.placeInfo.id}&page=${page-1}&size=5`)
         .then((response) => {
             setReviews(response.data.content);
             setTotalCount(response.data.totalElements);
+            console.log(response.data);
         }).catch((error) => console.log(error));
 
     }, [page])

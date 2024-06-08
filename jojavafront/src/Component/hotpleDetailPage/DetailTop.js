@@ -9,12 +9,19 @@ const DetailTop = (props) => {
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState("../../../image/searchIcon.png");
   const [selectedImage , setSelectedImage] = useState();
+  const [place, setPlace] = useState();
   const fileInputRef = useRef(null);
+  const accessToken = localStorage.getItem('accessToken');
+  const config = {
+    headers: {
+        "Authorization": `Bearer ${accessToken}`
+    }
+};
 
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/image?id=${props.placeInfo.id}`, {
+        const response = await axios.get(`http://220.149.232.224:8081/api/image?id=${props.placeInfo.id}`, {
           responseType: 'blob'
         });
         const imageUrl = URL.createObjectURL(response.data);
@@ -24,6 +31,11 @@ const DetailTop = (props) => {
       }
     };
     fetchImage();
+    axios.get(`http://220.149.232.224:8080/api/places/${props.placeInfo.id}`, config)
+    .then((response) => {
+      console.log(response.data);
+      setPlace(response.data);
+    }).catch((error) => console.log(error))
   }, [])
 
   const handleImageChange = (event) => {
@@ -48,7 +60,7 @@ const DetailTop = (props) => {
       const formData = new FormData();
       formData.append('image', selectedImage);
       try {
-        const response = await axios.post(`http://localhost:8081/api/image?id=${props.placeInfo.id}`, formData, {
+        const response = await axios.post(`http://220.149.232.224:8081/api/image?id=${props.placeInfo.id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -89,10 +101,9 @@ const DetailTop = (props) => {
             </Col>
             <Col md={10}>
               <Row className={styles.tags}>
-                <Col md={2} className={styles.tag}>#Tag1</Col>
-                <Col md={2} className={styles.tag}>#Tag2</Col>
-                <Col md={2} className={styles.tag}>#Tag3</Col>
-                <Col md={2} className={styles.tag}>#Tag4</Col>
+                <Col md={2} className={styles.tag}>
+                <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating}</> : <>---</>}&nbsp;)
+                </Col>
               </Row>
               <Row className={styles.placeName}>{props.placeInfo.place_name}</Row>
               <Row className={styles.placeAddress}>
