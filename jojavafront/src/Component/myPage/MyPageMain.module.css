@@ -26,6 +26,11 @@
   margin-right: 10px;
 }
 
+.kakaoMap {
+  width: 600px;
+  height: 500px;
+}
+
 .detailCard {
   background-color: white;
   border: 1px solid #ddd;

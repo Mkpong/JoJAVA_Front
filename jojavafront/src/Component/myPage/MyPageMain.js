@@ -17,6 +17,80 @@ const config = {
 const MyReview = (props) => {
   const [isActive, setIsActive] = useState(false);
   const [review, setReview] = useState();
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [info, setInfo] = useState();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    // 지도 생성
+    const mapContainer = document.getElementById('map');
+    const mapOption = {
+      center: new window.kakao.maps.LatLng(37.5665, 126.9780), // 지도의 중심좌표
+      level: 12 // 지도의 확대 레벨
+    };
+  
+    const map = new window.kakao.maps.Map(mapContainer, mapOption);
+    setMap(map);
+  }, []);
+
+  const apiUrl = "http://220.149.232.224:8080/api/users/my-reviews";
+
+  axios.get(apiUrl, config, {
+      params: {
+        page: 0,
+        size: 500
+      }
+  }).then((response) => {
+    console.log(response);
+
+    const contents = response.data.content;
+
+    contents.map((review) => {
+      const markerPosition = new window.kakao.maps.LatLng(
+        parseFloat(review.targetPlace.y),
+        parseFloat(review.targetPlace.x)
+      );
+
+      const marker = new window.kakao.maps.Marker({
+        position: markerPosition,
+        clickable: true
+      });
+
+      // 마커에 표시할 인포윈도우를 생성합니다 
+      var infowindow = new window.kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;font-size:12px;">${review.targetPlace.place_name}</div>`
+      });
+
+      window.kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+      window.kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+      // 마커 클릭 이벤트
+      window.kakao.maps.event.addListener(marker, 'click', function() {
+        clickMarker(review.targetPlace.kakaoPlaceId);
+      });
+
+      marker.setMap(map);
+    });
+  }).catch((error) => console.log(error));
+
+  // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+  function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+  }
+
+  // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+  function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+  }
+
+  const clickMarker = (kakaoPlaceId) => {
+    console.log(kakaoPlaceId);
+  }
 
   const handleReview = () => {
     if(isActive){
@@ -28,24 +102,9 @@ const MyReview = (props) => {
 
   return (
     <Row className={styles.buttonRow}>
-    <Col>
-        <Button variant='none' className={styles.infoButton} onClick={handleReview}>
-            <div className="d-flex justify-content-between align-items-center">
-                <span>장소 이름</span>
-                <img src='../../../image/downButton.png'  className={styles.downButton} />
-            </div>
-            {isActive && <>
-                <Row><Col className={styles.reviewTitleCol}>조건부 스타일링</Col></Row>
-                <Row><Col className={styles.reviewContentCol}>
-                위 예제에서는 배열에 특정 값이 있는지 여부에 따라 텍스트 색상을 다르게 적용합니다. 이처럼 삼항 연산자는 조건부 렌더링뿐만 아니라 조건부 스타일링에도 유용하게 사용될 수 있습니다.
-                위 예제에서는 배열에 특정 값이 있는지 여부에 따라 텍스트 색상을 다르게 적용합니다. 이처럼 삼항 연산자는 조건부 렌더링뿐만 아니라 조건부 스타일링에도 유용하게 사용될 수 있습니다.
-                위 예제에서는 배열에 특정 값이 있는지 여부에 따라 텍스트 색상을 다르게 적용합니다. 이처럼 삼항 연산자는 조건부 렌더링뿐만 아니라 조건부 스타일링에도 유용하게 사용될 수 있습니다.
-                위 예제에서는 배열에 특정 값이 있는지 여부에 따라 텍스트 색상을 다르게 적용합니다. 이처럼 삼항 연산자는 조건부 렌더링뿐만 아니라 조건부 스타일링에도 유용하게 사용될 수 있습니다.
-                
-                </Col></Row>
-            </>}
-        </Button>
-    </Col>
+      <Col>
+        <div id="map" className={styles.kakaoMap}></div>
+      </Col>
     </Row>
   );
 }
