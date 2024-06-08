@@ -47,7 +47,7 @@ const PlaceInfo = (props) => {
   const fileInputRef = useRef(null);
   const [selectedImage , setSelectedImage] = useState();
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(5);
+  const [totalCount, setTotalCount] = useState(0);
   const [reviews, setReviews] = useState();
   const accessToken = localStorage.getItem('accessToken');
   const config = {
@@ -104,7 +104,7 @@ const PlaceInfo = (props) => {
         <Col md={12}>
           <Row>
             <Col >
-            <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating}</> : <>---</>}&nbsp;)
+            <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating.toFixed(2)}</> : <>---</>}&nbsp;)
             </Col>
           </Row>
           <Row className={styles.datasetTitle}>
@@ -126,9 +126,10 @@ const PlaceInfo = (props) => {
                 }))}
       <Row>
         <Col className={styles.pageCol}>
+        {reviews && 
         <Pagination
             activePage={page}
-            itemsCountPerPage={5}
+            itemsCountPerPage={3}
             totalItemsCount={totalCount}
             pageRangeDisplayed={5}
             prevPageText={"<"}
@@ -142,7 +143,7 @@ const PlaceInfo = (props) => {
             itemClassLast={styles.paginationListItemLastChild}
             linkClassHover={styles.paginationLinkHover}
             linkClassActiveHover={styles.paginationLinkActiveHover}
-        />
+        />}
         </Col>
     </Row>
       </Container>

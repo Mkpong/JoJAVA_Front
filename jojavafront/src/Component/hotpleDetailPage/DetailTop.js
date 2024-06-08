@@ -102,7 +102,7 @@ const DetailTop = (props) => {
             <Col md={10}>
               <Row className={styles.tags}>
                 <Col md={2} className={styles.tag}>
-                <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating}</> : <>---</>}&nbsp;)
+                <img src="../../../image/star.png" className={styles.imageStar}></img>(&nbsp;{place ? <>{place.rating.toFixed(2)}</> : <>---</>}&nbsp;)
                 </Col>
               </Row>
               <Row className={styles.placeName}>{props.placeInfo.place_name}</Row>
